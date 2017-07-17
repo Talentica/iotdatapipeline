@@ -8,12 +8,15 @@ pipeline{
     parameters {
 	string(name: 'gitUrl', defaultValue: 'https://github.com/Talentica/iotdatapipeline.git', description: 'Project Git Url')
 	string(name: 'gitBranch', defaultValue: 'shubhasish', description: 'Git branch top checkout')
+	string(name: 'pomPath', defaultValue: 'IgniteSparkIOT/pom.xml', description: 'path of pom.xml')
 
 }
     stages{
-	stage('Echo'){
-	steps{
-echo "Hello world!"}
+	stage('Maven Build'){
+	   steps{
+		echo "Building Maven Project"
+		sh "mvn -f IgniteSparkIOT/pom.xml clean install"
+                }
 }
 
 
