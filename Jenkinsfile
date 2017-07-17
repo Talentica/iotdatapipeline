@@ -16,6 +16,9 @@ pipeline{
 	   steps{
 		echo "Building Maven Project"
 		sh "mvn -f IgniteSparkIoT/pom.xml clean install"
+}}
+	stage('Artifactory Upload'){
+	   steps{
 		script{
 			def server = Artifactory.newServer(url:"http://172.19.103.71:8081/artifactory/",username:"iotuser",password:"iotuser")
 			def uploadSpec = """{
@@ -26,7 +29,8 @@ pipeline{
    							 }
 						        ]
 					    }"""
-			server.upload(uploadSpec)
+		def buildInfo = server.upload(uploadSpec)
+				server.publishBuildInfo(buildInfo)
 }
                 }
 }
