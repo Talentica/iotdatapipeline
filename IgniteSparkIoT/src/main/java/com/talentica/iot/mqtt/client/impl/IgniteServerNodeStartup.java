@@ -15,24 +15,20 @@
  * limitations under the License.
  */
 
-package org.apache.ignite.iot;
+package com.talentica.iot.mqtt.client.impl;
 
-import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
-import org.apache.ignite.events.CacheEvent;
-import org.apache.ignite.events.Event;
-import org.apache.ignite.events.EventType;
-import org.apache.ignite.lang.IgnitePredicate;
+import org.apache.log4j.Logger;
 
 /**
  *
  */
-public class IgniteNodeStartup {
-    public static void main(String args[]) {
-        Ignition.start(args[0]);
-        
-        
+public class IgniteServerNodeStartup {
 
-        System.out.println(" >>> Apache Ignite node is up and running.");
-    }
+	private static final Logger logger = Logger.getLogger(IgniteServerNodeStartup.class);
+
+	public static void run() {
+		Ignition.start("ignite-config.xml");
+		logger.info("Apache Ignite Server Node is up and running.");
+	}
 }
