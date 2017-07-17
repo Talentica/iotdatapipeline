@@ -9,7 +9,7 @@ pipeline{
        stage('GIT Checkout'){
 		 steps{
 		   echo 'Code Checkout from GIT'
-		   git url:"${params.gitUrl}" branch:"${params.gitBranch}"
+		   git(url:"${params.gitUrl}" ,branch:"${params.gitBranch}")
 		   
 
 
