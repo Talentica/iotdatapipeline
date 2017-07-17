@@ -15,7 +15,7 @@ pipeline{
 	stage('Maven Build'){
 	   steps{
 		echo "Building Maven Project"
-		sh "mvn -f IgniteSparkIOT/pom.xml clean install"
+		sh "mvn -f IgniteSparkIoT/pom.xml clean install"
                 }
 }
 
