@@ -9,6 +9,7 @@ target/*
 .project
 .settings/*
 .springBeans
+dependency-reduced-pom.xml
 
 #log files
 *.log
