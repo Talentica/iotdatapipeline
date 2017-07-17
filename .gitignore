@@ -4,10 +4,10 @@
 
 #Java files
 *.class
-target/*
+/IgniteSparkIOT/target/
 .classpath
 .project
-.settings/*
+/IgniteSparkIOT/.settings/*
 .springBeans
 dependency-reduced-pom.xml
 
