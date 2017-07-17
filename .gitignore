@@ -1,0 +1,13 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+#Java files
+*.class
+target/*
+
+#log files
+*.log
+
+#Spark warehouse
+spark-warehouse/*
