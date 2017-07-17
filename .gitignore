@@ -5,6 +5,10 @@
 #Java files
 *.class
 target/*
+.classpath
+.project
+.settings/*
+.springBeans
 
 #log files
 *.log
