@@ -9,7 +9,7 @@ pipeline{
 	string(name: 'gitUrl', defaultValue: 'https://github.com/Talentica/iotdatapipeline.git', description: 'Project Git Url')
 	string(name: 'gitBranch', defaultValue: 'shubhasish', description: 'Git branch top checkout')
 	string(name: 'pomPath', defaultValue: 'IgniteSparkIoT/pom.xml', description: 'path of pom.xml')
-	string(name: 'repositoryUrl', defaultValue: 'http://172.19.103.71:8082/repository/'
+	string(name: 'repositoryUrl', defaultValue: 'http://172.19.103.71:8082/repository/', description: 'repository url')
 
 }
     stages{
