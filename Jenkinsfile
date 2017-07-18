@@ -31,7 +31,6 @@ pipeline{
 						        ]
 					    }"""
 		def buildInfo = server.upload(uploadSpec)
-				server.publishBuildInfo(buildInfo)
 }
                 }
 }
