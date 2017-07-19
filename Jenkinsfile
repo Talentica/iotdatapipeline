@@ -21,7 +21,7 @@ pipeline{
 	stage('Artifactory Upload'){
 	   steps{
 		script{
-			def server = Artifactory.newServer(url:"${params.repositoryUrl}",credentialsId = "nexus")
+			def server = Artifactory.newArtifactoryServer(url:"${params.repositoryUrl}",credentialsId = "nexus")
 			def uploadSpec = """{
   					      "files": [
    							 {
