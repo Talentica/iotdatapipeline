@@ -20,18 +20,8 @@ pipeline{
 }}
 	stage('Artifactory Upload'){
 	   steps{
-		script{
-			def server = Artifactory.newServer(url:"${params.repositoryUrl}", username:"admin",password:"admin123",credentialsId:"nexus")
-			def uploadSpec = """{
-  					      "files": [
-   							 {
-     							 "pattern": "IgniteSparkIoT/target/*-dependencies.jar",
-      							 "target": "test/"
-   							 }
-						        ]
-					    }"""
-		def buildInfo = server.upload(uploadSpec)
-}
+		sh "curl --cacert {env.WORKSPACE}/nexus.crt -u admin:admin123 -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}/nexus/" 
+
                 }
 }
 
