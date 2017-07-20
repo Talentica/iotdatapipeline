@@ -26,7 +26,7 @@ pipeline{
   					      "files": [
    							 {
      							 "pattern": "IgniteSparkIoT/target/*-dependencies.jar",
-      							 "target": "test/"
+      							 "target": "nexus/"
    							 }
 						        ]
 					    }"""
