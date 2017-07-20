@@ -20,7 +20,7 @@ pipeline{
 }}
 	stage('Artifactory Upload'){
 	   steps{
-		sh "curl --cacert env.WORKSPACE/nexus.crt -u admin:admin123 -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}/nexus/" 
+		sh "curl --cacert ${env.WORKSPACE}/nexus.crt -u admin:admin123 -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}/nexus/" 
 
                 }
 }
