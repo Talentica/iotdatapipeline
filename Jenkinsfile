@@ -26,7 +26,7 @@ pipeline{
 }
 	stage('Build Image'){
 		steps{
-			kubernetes.buildImage(name:'ignite:test','path':'.')
+			kubernetes.buildImage(name:'ignite:test',path:'.')
 
 }
 		
