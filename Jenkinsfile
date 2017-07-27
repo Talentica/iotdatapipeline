@@ -26,7 +26,10 @@ pipeline{
 }
 	stage('Build Image'){
 		steps{
-			sh "docker build -t ignite:test ."
+			script{
+		kubernetes.image().withName("example").build().fromPath(".")
+
+}
 
 }
 		
