@@ -1,0 +1,8 @@
+FROM java:alpine
+RUN mkdir application
+RUN apk --no-cache add curl
+COPY nexus.crt application
+RUN curl -v --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nexus/repository/nexus/ignite_spark_iot-1.0-SNAPSHOT-jar-with-dependencies.jar" -o application/ignite.jar
+COPY ignite-config.xml application
+WORKDIR application
+CMD ["java","-cp","ignite_spark_iot-1.0-SNAPSHOT-jar-with-dependencies.jar","org.apache.ignite.iot.IgniteNodeStartup","ignite-config.xml"]
