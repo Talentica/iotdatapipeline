@@ -20,16 +20,14 @@ pipeline{
 }}
 	stage('Artifactory Upload'){
 	   steps{
-		sh "curl --cacert /var/jenkins_home/jobs/test1/nexus.crt -u admin:admin123 -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}nexus/" 
+		sh "curl --cacert /var/jenkins_home/jobs/test1/nexus.crt -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}nexus/" 
 
                 }
 }
 
 	stage('Configfile Upload'){
 		steps{
-			script{
-			println "Configfile Upload"
-}
+		 sh "curl --cacert /var/jenkins_home/jobs/test1/nexus.crt -T ignite-config.xml ${params.repositoryUrl}config_files/"
 
 }
 
