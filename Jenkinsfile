@@ -23,7 +23,7 @@ pipeline{
 	   steps{
 				
 	withCredentials([[$class:'UsernamePasswordBinding',credentialsId:'nexus_user',variable:'NEXUS_USER']
-,[$class:'CertificateMultiBinding',credentialsId:'nexu',keystoreVariable:'CERT']]){
+,[$class:'CertificateMultiBinding',credentialsId:'nexus',keystoreVariable:'CERT']]){
 	sh "curl -v --cacert ${CERT} -u ${NEXUS_USER} -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}nexus/" 
 }
                 }
