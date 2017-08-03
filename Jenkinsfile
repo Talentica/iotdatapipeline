@@ -24,6 +24,19 @@ pipeline{
 
                 }
 }
+
+	stage('Configfile Upload'){
+		steps{
+			script{
+			println "Configfile Upload"
+}
+
+}
+
+
+
+}
+
 	stage('Build Image'){
 		steps{
 			script{
@@ -31,11 +44,33 @@ pipeline{
 
 }
 
+}}
+	stage('Tag Image'){
+		steps{
+			script{
+			println "Image Tag phase"
+}
+}
+
+}
+	stage('Image Push'){
+		steps{
+			script{
+			println "Image pushing phase"
+}
+}
+
+}		
+
+	stage('Deploy'){
+		steps{
+			script{
+			println "Deploying Application"
 }
 		
 }
 
-
+}
           }
 
 
