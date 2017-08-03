@@ -22,17 +22,17 @@ pipeline{
 	stage('Artifactory Upload'){
 	   steps{
 				
-	withCredentials([usernameColonPassword(credentialsId:'nexus_user',varriable:'NEXUS_USER')])
+	withCredentials([usernameColonPassword(credentialsId:'nexus_user',varriable:'NEXUS_USER')]){
 	sh "curl -v --cacert /var/jenkins_home/jobs/test1/nexus.crt -u $NEXUS_USER -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}nexus/" 
-
+}
                 }
 }
 
 	stage('Configfile Upload'){
 		steps{
-	withCredentials([usernameColonPassword(credentialsId:'nexus_user',varriable:'NEXUS_USER')])	
+	withCredentials([usernameColonPassword(credentialsId:'nexus_user',varriable:'NEXUS_USER')]){	
 	 sh "curl -v --cacert /var/jenkins_home/jobs/test1/nexus.crt -u $NEXUS_USER -T ignite-config.xml ${params.repositoryUrl}config_files/"
-
+}
 }
 
 
