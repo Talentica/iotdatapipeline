@@ -55,7 +55,7 @@ pipeline{
 
 	stage('Deploy'){
 		steps{
-		sh "curl -X POST  -F \"serviceName=all\" -F \"deploymentFile=@docker-compose.yml\" ${param.wrapperUrl}v1/api/wrapper/deploy"
+		sh "curl -X POST  -F \"serviceName=all\" -F \"deploymentFile=@docker-compose.yml\" ${params.wrapperUrl}v1/api/wrapper/deploy"
 		
 }
 
