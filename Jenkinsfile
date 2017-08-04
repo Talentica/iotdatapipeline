@@ -42,25 +42,12 @@ pipeline{
 
 	stage('Build Image'){
 		steps{
-			script{
-		for (int i = 0; i<10; ++i){echo "${i}"}
-
-}
+		sh "curl -v -X PUT -F dockerfile=@ignite_dockerfile "http://172.19.103.71:5001/v1/api/image/build"
 
 }}
-	stage('Tag Image'){
-		steps{
-			script{
-			println "Image Tag phase"
-}
-}
-
-}
 	stage('Image Push'){
 		steps{
-			script{
-			println "Image pushing phase"
-}
+		sh "curl -X POST -H "Content-Type: application/json" -X POST -d '{\"image\":\"registry:5000/ignite:latest\"}' "http://localhost:5001/v1/api/image/push"
 }
 
 }		
