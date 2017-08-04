@@ -10,7 +10,7 @@ pipeline{
 	string(name: 'gitBranch', defaultValue: 'shubhasish', description: 'Git branch top checkout')
 	string(name: 'pomPath', defaultValue: 'IgniteSparkIoT/pom.xml', description: 'path of pom.xml')
 	string(name: 'repositoryUrl', defaultValue: 'https://172.19.103.71:8443/nexus/repository/', description: 'repository url')
-	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5001/', description: 'wrapper application url')
+	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5000/', description: 'wrapper application url')
 
 }
 
@@ -55,9 +55,7 @@ pipeline{
 
 	stage('Deploy'){
 		steps{
-			script{
-			println "Deploying Application"
-}
+		sh "curl -X POST  -F \"serviceName=all\" -F \"deploymentFile=@docker-compose.yml\" ${param.wrapperUrl}v1/api/wrapper/deploy"
 		
 }
 

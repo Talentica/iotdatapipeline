@@ -1,0 +1,26 @@
+version: '3'
+services:
+  EMQ:
+
+    ports:
+      - "1883:1883"
+
+    image: shubhashish/emq
+    container_name: emq
+    network_mode: "host"
+
+  Ignite:
+    image: registry:5000/ignite:latest
+    container_name: ignite
+    network_mode: "host"
+    build:
+      context: /home/subhasishp/PycharmProjects/dockerWrapper/wrapper/composer
+      dockerfile: ignite_dockerfile
+#    ports:
+#     - "3000:3000"
+  Mongo:
+    image: mongo
+    container_name: mongo
+    network_mode: "host"
+    ports:
+     - "27017:27017"
