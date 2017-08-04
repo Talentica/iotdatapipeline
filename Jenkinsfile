@@ -43,12 +43,12 @@ pipeline{
 
 	stage('Build Image'){
 		steps{
-		sh "curl -v -X PUT -F dockerfile=@ignite_dockerfile ${params.wrapperUrl}/v1/api/image/build"
+		sh "curl -v -X PUT -F dockerfile=@ignite_dockerfile ${params.wrapperUrl}v1/api/image/build"
 
 }}
 	stage('Image Push'){
 		steps{
-		sh "curl -X POST -H \"Content-Type: application/json\" -X POST -d '{\"image\":\"registry:5000/ignite:latest\"}' ${params.wrapperUrl}/v1/api/image/push"
+		sh "curl -X POST -H \"Content-Type: application/json\" -X POST -d '{\"image\":\"registry:5000/ignite:latest\"}' ${params.wrapperUrl}v1/api/image/push"
 }
 
 }		
