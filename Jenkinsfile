@@ -11,6 +11,7 @@ pipeline{
 	string(name: 'pomPath', defaultValue: 'IgniteSparkIoT/pom.xml', description: 'path of pom.xml')
 	string(name: 'repositoryUrl', defaultValue: 'https://172.19.103.71:8443/nexus/repository/', description: 'repository url')
 	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5000/', description: 'wrapper application url')
+	string(name: 'deploymentOption', defaultValue: 'Ignite', description: 'which component to deploy')
 
 }
 
@@ -18,7 +19,7 @@ pipeline{
 	stage('Maven Build'){
 	   steps{
 		echo "Building Maven Project"
-		sh "mvn -f IgniteSparkIoT/pom.xml clean install"
+		sh "mvn -f ${params.pomPath} clean install"
 }}
 	stage('Artifactory Upload'){
 	   steps{
@@ -55,7 +56,7 @@ pipeline{
 
 	stage('Deploy'){
 		steps{
-		sh "curl -X POST  -F \"serviceName=all\" -F \"deploymentFile=@docker-compose.yml\" ${params.wrapperUrl}v1/api/wrapper/deploy"
+		sh "curl -X POST  -F \"serviceName=${params.deploymentOption}\" -F \"deploymentFile=@docker-compose.yml\" ${params.wrapperUrl}v1/api/wrapper/deploy"
 		
 }
 
