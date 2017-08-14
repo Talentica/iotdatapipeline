@@ -52,7 +52,7 @@ pipeline{
 	stage('Image Push'){
 		steps{
 		sh "curl -X POST -H \"Content-Type: application/json\" -X POST -d '{\"image\":\"127.0.0.1:5000/ignite:latest\"}' ${params.wrapperUrl}v1/api/image/push | tee error.txt"
-		 sh "count=`grep -o \"{'status':'failure'\" error.txt | wc -l`"
+		 sh "count=`grep -o \"{'status':'failure'\" error.txt | wc -l` && if [ $count -ge 0 ]; then exit 1; fi"
                 sh "echo $count"
 
 }
