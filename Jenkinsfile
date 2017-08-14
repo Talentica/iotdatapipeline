@@ -45,8 +45,7 @@ pipeline{
 	stage('Build Image'){
 		steps{
 		sh "curl -v -X PUT -F \"image=ignite\" -F dockerfile=@ignite_dockerfile ${params.wrapperUrl}v1/api/image/build | tee error.txt"
-		sh "count=`grep -o \"{'status':'failure'\" error.txt | wc -l`"
-		sh "echo $count" 
+		sh "if [ `grep -o \"{'status':'failure'\" error.txt | wc -l` -ge 0 ]; then exit 1; fi" 
 
 }}
 	stage('Image Push'){
