@@ -6,4 +6,4 @@ RUN curl --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nex
     curl --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nexus/repository/config_files/ignite-config.xml" -o application/ignite-config.xml &&\
     rm application/nexus.crt
 WORKDIR application
-CMD ["java","-cp","ignite_spark_iot-1.0-SNAPSHOT-jar-with-dependencies.jar","org.apache.ignite.iot.IgniteNodeStartup","ignite-config.xml"]
+CMD ["java","-cp","IgniteSparkIOT-0.0.1-SNAPSHOT.jar", "-Dtarget_env=development", "-Dmongodb.url=mongo", "-Dbroker.url=tcp://EMQ:1883", "-Dtopic=temperature", "-Xms512m", "-Xmx512m", "com.talentica.iot.SparkStreamerApplication","ignite"]
