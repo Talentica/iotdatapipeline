@@ -2,8 +2,8 @@ pipeline{
     agent any
    
     tools{
-	maven 'maven', 
-	java 'java'
+	maven 'maven' 
+	JDK 'java'
 }
 
     parameters {
