@@ -26,7 +26,7 @@ pipeline{
 				
 	withCredentials([[$class:'UsernamePasswordBinding',credentialsId:'nexus_user',variable:'NEXUS_USER']
 ,[$class:'CertificateMultiBinding',credentialsId:'nexus',keystoreVariable:'CERT']]){
-	sh "curl -v --cacert /var/jenkins_home/jobs/test1/nexus.crt --capath ${CERT} -u ${NEXUS_USER} -T IgniteSparkIoT/target/*-dependencies.jar ${params.repositoryUrl}nexus/" 
+	sh "curl -v --cacert /var/jenkins_home/jobs/test1/nexus.crt --capath ${CERT} -u ${NEXUS_USER} -T IgniteSparkIoT/target/IgniteSparkIOT-0.0.1-SNAPSHOT.jar ${params.repositoryUrl}nexus/" 
 }
                 }
 }
