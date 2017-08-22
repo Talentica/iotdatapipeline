@@ -18,7 +18,7 @@ services:
       dockerfile: ignite_dockerfile
 #    ports:
 #     - "3000:3000"
-  Mongo:
+  mongo:
     image: mongo
     container_name: mongo
     network_mode: "host"
