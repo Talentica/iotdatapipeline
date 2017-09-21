@@ -44,13 +44,13 @@ pipeline{
 
 	stage('Build Image'){
 		steps{
-		sh "curl -v -X PUT -F \"image=ignite\" -F dockerfile=@ignite_dockerfile ${params.wrapperUrl}v1/api/image/build | tee error.txt"
+		sh "curl -v -X PUT -F \"image=ignite\" -F dockerfile=@ignite_dockerfile ${params.wrapperUrl}v1/api/wrapper/image/build | tee error.txt"
 		sh "if [ `grep -o \"{'status':'failure'\" error.txt | wc -l` -gt 0 ]; then exit 1; else echo \"Failure Check Passed\"; fi" 
 
 }}
 	stage('Image Push'){
 		steps{
-		sh "curl -X POST -H \"Content-Type: application/json\" -X POST -d '{\"image\":\"127.0.0.1:5000/ignite:latest\"}' ${params.wrapperUrl}v1/api/image/push | tee error.txt"
+		sh "curl -X POST -H \"Content-Type: application/json\" -X POST -d '{\"image\":\"127.0.0.1:5000/ignite:latest\"}' ${params.wrapperUrl}v1/api/wrapper/image/push | tee error.txt"
 		 sh "if [ `grep -o \"{'status':'failure'\" error.txt | wc -l` -gt 0 ]; then exit 1; else echo \"Failure Check Passed\"; fi"
            
 
