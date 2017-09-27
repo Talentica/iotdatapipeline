@@ -1,9 +1,11 @@
 package com.talentica.iot.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 
-import org.springframework.data.annotation.Id;
-
+@Document
 public class Temperature implements Serializable {
 
 	/**
@@ -27,7 +29,7 @@ public class Temperature implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("Temperature[id=%s, deviceId='%d', lastName='%f']", id, deviceId, temperature);
+		return String.format("Temperature[id=%s, deviceId='%d', temperature='%f']", id, deviceId, temperature);
 	}
 
 	public void setDeviceId(Integer deviceId) {

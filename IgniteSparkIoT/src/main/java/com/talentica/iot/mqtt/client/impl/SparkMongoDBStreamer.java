@@ -3,6 +3,7 @@ package com.talentica.iot.mqtt.client.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.talentica.iot.mongo.repository.TemperatureRepository;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
@@ -17,15 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.talentica.iot.domain.Temperature;
-import com.talentica.iot.mongo.repository.TemperatureRepository;
 
 @Component("sparkMongoDBStreamer")
 public class SparkMongoDBStreamer extends SparkStreamerImpl {
 
-	@Autowired
-	private TemperatureRepository temperatureRepository;
 
 	private static final String streamerName = "MongoStreamer";
+
+	@Autowired
+	TemperatureRepository temperatureRepository;
 
 	public void run() {
 		System.out.println("streamerName: " + streamerName + " brokerUrl: " + brokerUrl + " sparkBatchInterval: "
@@ -63,7 +64,6 @@ public class SparkMongoDBStreamer extends SparkStreamerImpl {
 						sampleTemperature.setDeviceId(deviceId);
 						sampleTemperature.setTemperature(temperature);
 						temperatureList.add(sampleTemperature);
-						//temperatureRepository.save(sampleTemperature);
 					}
 					temperatureRepository.save(temperatureList);
 				}

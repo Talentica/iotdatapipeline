@@ -17,7 +17,9 @@
 
 package com.talentica.iot.mqtt.client.impl;
 
+import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,7 +30,7 @@ public class IgniteServerNodeStartup {
 	private static final Logger logger = Logger.getLogger(IgniteServerNodeStartup.class);
 
 	public static void run() {
-		Ignition.start("ignite-config.xml");
+		Ignition.start("ignite-mongo.xml");
 		logger.info("Apache Ignite Server Node is up and running.");
 	}
 }
