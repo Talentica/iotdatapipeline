@@ -1,71 +1,68 @@
 package com.talentica.iot.cachestore;
 
-import java.io.Serializable;
+import com.talentica.iot.MongoDbHelper;
+import com.talentica.iot.domain.TempKey;
+import com.talentica.iot.domain.TemperatureMongo;
+import org.apache.ignite.cache.store.CacheStoreAdapter;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import javax.cache.Cache;
 import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriterException;
-
-import org.apache.ignite.IgniteLogger;
-import org.apache.ignite.cache.store.CacheStoreAdapter;
-import org.apache.ignite.resources.LoggerResource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.talentica.iot.domain.Temperature;
-import com.talentica.iot.mongo.repository.TemperatureIgniteRepository;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 @Component("mongoCacheStore")
-public class MongoCacheStore  extends CacheStoreAdapter<Integer, Temperature> implements Serializable {
+public class MongoCacheStore  extends CacheStoreAdapter<TempKey, TemperatureMongo> implements Serializable {
     
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@LoggerResource
-    private IgniteLogger log;
+    private static final Logger logger = Logger.getLogger(MongoCacheStore.class);
+	
 
-   @Autowired
-   TemperatureIgniteRepository temperatureIgniteRepository;
+	public MongoCacheStore() {
 
-    @Override public Temperature load(Integer key) throws CacheLoaderException {
-        Temperature temp = temperatureIgniteRepository.findByDeviceId(key);
+	}
 
-        log("Loaded temperature: " + temp);
+    @Override public TemperatureMongo load(TempKey key) throws CacheLoaderException {
+    	TemperatureMongo temp = MongoDbHelper.getInstance().getDatastore().find(TemperatureMongo.class).field("id").equal(key).get();
+
+        logger.info("Loaded temperature: " + temp);
 
         return temp;
     }
 
-    @Override public void write(Cache.Entry<? extends Integer, ? extends Temperature> cacheEntry) throws CacheWriterException {
-    	temperatureIgniteRepository.save(cacheEntry.getValue());
+    @Override public void write(Cache.Entry<? extends TempKey, ? extends TemperatureMongo> cacheEntry) throws CacheWriterException {
+    	TemperatureMongo temp = cacheEntry.getValue();
 
-        log("Stored temperature: " + cacheEntry.getValue());
+        MongoDbHelper.getInstance().getDatastore().save(cacheEntry.getValue());
+
+        logger.info("Stored temperature: " + cacheEntry.getValue());
     }
 
     /** {@inheritDoc} */
     @Override public void delete(Object key) throws CacheWriterException {
-    	Temperature temp = temperatureIgniteRepository.findByDeviceId((Integer)key);
+    	TemperatureMongo temp = MongoDbHelper.getInstance().getDatastore().find(TemperatureMongo.class).field("id").equal(key).get();
     	
     	if(temp != null) {
-    		temperatureIgniteRepository.delete(temp);
-    		log("Removed temperature: " + key);
+            MongoDbHelper.getInstance().getDatastore().delete(temp);
+            logger.info("Removed temperature: " + key);
     	}
     }
-
-    /**
-     * @param msg Message.
-     */
-    private void log(String msg) {
-        if (log != null) {
-            log.info(">>>");
-            log.info(">>> " + msg);
-            log.info(">>>");
-        }
-        else {
-            System.out.println(">>>");
-            System.out.println(">>> " + msg);
-            System.out.println(">>>");
-        }
+    
+    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
+    {
+        logger.info("Deserializing");
+    }
+    
+    private void writeObject(ObjectOutputStream aOutputStream) throws IOException
+    {
+        logger.info("Serializing");
     }
 }

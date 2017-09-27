@@ -1,9 +1,8 @@
 package com.talentica.iot.mqtt.client.impl;
 
+import com.talentica.iot.mqtt.client.ISparkStreamer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.talentica.iot.mqtt.client.ISparkStreamer;
 
 @Component
 public abstract class SparkStreamerImpl implements ISparkStreamer {

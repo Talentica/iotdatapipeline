@@ -1,10 +1,7 @@
 package com.talentica.iot;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.ServerAddress;
 import com.talentica.iot.domain.TemperatureMongo;
-import org.h2.store.Data;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 

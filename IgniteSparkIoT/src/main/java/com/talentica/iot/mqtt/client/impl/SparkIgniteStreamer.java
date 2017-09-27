@@ -1,38 +1,19 @@
 package com.talentica.iot.mqtt.client.impl;
 
-import java.io.Serializable;
-import java.util.*;
-
-import javax.cache.configuration.FactoryBuilder;
-
-import com.talentica.iot.domain.Temperature;
-import org.apache.ignite.Ignite;
+import com.talentica.iot.cachestore.MongoCacheStore;
+import com.talentica.iot.domain.TempKey;
+import com.talentica.iot.domain.TemperatureMongo;
 import org.apache.ignite.IgniteCache;
-import org.apache.ignite.Ignition;
-import org.apache.ignite.cache.CacheAtomicityMode;
-import org.apache.ignite.cache.store.CacheStore;
-import org.apache.ignite.configuration.CacheConfiguration;
-import org.apache.ignite.spark.IgniteContext;
-import org.apache.ignite.spark.IgniteRDD;
 import org.apache.ignite.spark.JavaIgniteContext;
 import org.apache.ignite.spark.JavaIgniteRDD;
 import org.apache.log4j.Logger;
-import org.apache.spark.Partition;
 import org.apache.spark.SparkConf;
-import org.apache.spark.SparkContext;
-import org.apache.spark.TaskContext;
-import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.VoidFunction;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Durations;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
@@ -41,12 +22,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.talentica.iot.cachestore.MongoCacheStore;
-import com.talentica.iot.domain.TempKey;
-import com.talentica.iot.domain.TemperatureMongo;
-
-import scala.Tuple2;
-import scala.collection.Iterator;
+import java.io.Serializable;
+import java.util.*;
 
 @Component("sparkIgniteStreamer")
 public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializable {

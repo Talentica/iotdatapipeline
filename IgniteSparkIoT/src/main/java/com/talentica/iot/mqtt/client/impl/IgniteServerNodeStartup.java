@@ -17,9 +17,7 @@
 
 package com.talentica.iot.mqtt.client.impl;
 
-import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
-import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.log4j.Logger;
 
 /**
