@@ -35,7 +35,7 @@ public class SparkStreamerApplication implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
-        System.setProperty("hadoop.home.dir", "D:\\IOT\\hadoop-2.6.0");
+        
 		String argument = null;
 		if (args.length > 0) {
 			argument = args[0];
