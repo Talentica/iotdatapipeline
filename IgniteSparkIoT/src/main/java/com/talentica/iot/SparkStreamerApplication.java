@@ -1,12 +1,41 @@
 package com.talentica.iot;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.talentica.iot.mqtt.client.ISparkStreamer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import com.talentica.iot.mqtt.client.impl.SparkStreamerImpl;
+@SpringBootApplication
+@Import(value = {MongoConfiguration.class})
+@EnableMongoRepositories(basePackages = "com.talentica.iot.mongo.repository")
+public class SparkStreamerApplication implements CommandLineRunner {
+	
+	@Autowired
+	@Qualifier("sparkMongoDBStreamer")
+	ISparkStreamer sparkMongoDBStreamer;
+	
+	@Autowired
+	@Qualifier("sparkIgniteStreamer")
+	ISparkStreamer sparkIgniteStreamer;
 
-public class SparkStreamerApplication {
+    @Value("${mongodb.url}")
+    protected String mongodbUrl;
+
+    @Value("${mongodb.schema}")
+    protected String mongodbSchema;
 
 	public static void main(String[] args) {
+		SpringApplication.run(SparkStreamerApplication.class, args);
+	}
+	
+	@Override
+	public void run(String... args) throws Exception {
+        
 		String argument = null;
 		if (args.length > 0) {
 			argument = args[0];
@@ -16,23 +45,24 @@ public class SparkStreamerApplication {
 			printHelp();
 		}
 
-		try (ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-				"application-context.xml")) {
-			SparkStreamerImpl streamer = createStreamer(args[0], applicationContext);
-			streamer.startStreamer();
-		}
+		
+		ISparkStreamer streamer = createStreamer(argument);
+		streamer.startStreamer();
+		
 	}
+	
 
-	public static SparkStreamerImpl createStreamer(String streamerType,
-			ClassPathXmlApplicationContext applicationContext) {
+	private ISparkStreamer createStreamer(String streamerType) {
 
 		if (streamerType.equals("mongo")) {
-			return (SparkStreamerImpl) applicationContext.getBean("sparkMongoDBStreamer");
+			return sparkMongoDBStreamer;
 		} else if (streamerType.equals("ignite")) {
-			return (SparkStreamerImpl) applicationContext.getBean("sparkIgniteStreamer");
+            MongoDbHelper.getInstance();
+            MongoDbHelper.initializeConnection(mongodbUrl,mongodbSchema);
+			return sparkIgniteStreamer;
 		}
 
-		return (SparkStreamerImpl) applicationContext.getBean("sparkMongoDBStreamer");
+		return sparkMongoDBStreamer;
 	}
 
 	public static void printHelp() {

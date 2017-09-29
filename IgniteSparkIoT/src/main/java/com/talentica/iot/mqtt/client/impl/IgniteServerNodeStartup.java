@@ -28,7 +28,7 @@ public class IgniteServerNodeStartup {
 	private static final Logger logger = Logger.getLogger(IgniteServerNodeStartup.class);
 
 	public static void run() {
-		Ignition.start("ignite-config.xml");
+		Ignition.start("ignite-mongo.xml");
 		logger.info("Apache Ignite Server Node is up and running.");
 	}
 }

@@ -1,9 +1,10 @@
 package com.talentica.iot.mqtt.client.impl;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.talentica.iot.mqtt.client.ISparkStreamer;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class SparkStreamerImpl implements ISparkStreamer {
 
 	@Value("${broker.url}")

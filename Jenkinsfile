@@ -34,7 +34,7 @@ pipeline{
 	stage('Configfile Upload'){
 		steps{
 	withCredentials([usernameColonPassword(credentialsId:'nexus_user',variable:'NEXUS_USER'),]){	
-	 sh "curl -v --cacert /var/jenkins_home/jobs/test1/nexus.crt -u ${NEXUS_USER} -T ignite-config.xml ${params.repositoryUrl}config_files/"
+	 sh "curl -v --cacert /var/jenkins_home/jobs/test1/nexus.crt -u ${NEXUS_USER} -T application.properties ${params.repositoryUrl}config_files/"
 }
 }
 

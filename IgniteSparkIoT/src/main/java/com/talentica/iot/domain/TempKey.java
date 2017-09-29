@@ -42,13 +42,8 @@ public class TempKey implements Serializable {
 
 	private UUID uuid;
 
-	/**
-	 * @param sensorId
-	 * @param ts
-	 */
-	public TempKey(int sensorId, Date ts) {
-		this.sensorId = sensorId;
-		this.ts = ts;
+
+	public TempKey() {
 		this.uuid = UUID.randomUUID();
 	}
 
@@ -99,4 +94,11 @@ public class TempKey implements Serializable {
 	public UUID getUuid() {
 		return uuid;
 	}
+
+	@Override
+	public String toString() {
+		return "TempKey [sensorId=" + sensorId + ", ts=" + ts + ", uuid=" + uuid + "]";
+	}
+	
+	
 }
