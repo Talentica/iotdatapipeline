@@ -35,7 +35,7 @@ public class SparkStreamerApplication implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
-        
+
 		String argument = null;
 		if (args.length > 0) {
 			argument = args[0];
@@ -44,11 +44,9 @@ public class SparkStreamerApplication implements CommandLineRunner {
 				|| (!argument.equalsIgnoreCase("mongo") && !argument.equalsIgnoreCase("ignite"))) {
 			printHelp();
 		}
-
 		
 		ISparkStreamer streamer = createStreamer(argument);
 		streamer.startStreamer();
-		
 	}
 	
 
