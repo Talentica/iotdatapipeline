@@ -8,11 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
 @Import(value = {MongoConfiguration.class})
-@EnableMongoRepositories(basePackages = "com.talentica.iot.mongo.repository")
 public class SparkStreamerApplication implements CommandLineRunner {
 	
 	@Autowired
@@ -55,6 +53,7 @@ public class SparkStreamerApplication implements CommandLineRunner {
 		if (streamerType.equals("mongo")) {
 			return sparkMongoDBStreamer;
 		} else if (streamerType.equals("ignite")) {
+			System.out.println("Mongo configuration \nURL: "+mongodbUrl+"\nSchema:"+mongodbSchema);
             MongoDbHelper.getInstance();
             MongoDbHelper.initializeConnection(mongodbUrl,mongodbSchema);
 			return sparkIgniteStreamer;
