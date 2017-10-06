@@ -5,22 +5,29 @@ import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
  * Created by CalvinI on 27-09-2017.
  */
 
 @Configuration
-public class MongoConfiguration {
+@EnableMongoRepositories(basePackages = "com.talentica.iot.mongo.repository")
+public class MongoConfiguration extends AbstractMongoConfiguration {
 
-    @Bean
-    public Mongo mongo(@Value("${mongodb.url}") String url) throws Exception {
+    @Value("${mongodb.url}") String url;
+    @Value("${mongodb.schema}") String schema;
+
+
+    @Override
+    public Mongo mongo() throws Exception {
         return new MongoClient(url);
     }
 
-    @Bean
-    public MongoTemplate mongoTemplate(Mongo mongo, @Value("${mongodb.schema}") String schema) throws Exception {
-        return new MongoTemplate(mongo, schema);
+    @Override
+    protected String getDatabaseName() {
+        return schema;
     }
 }
