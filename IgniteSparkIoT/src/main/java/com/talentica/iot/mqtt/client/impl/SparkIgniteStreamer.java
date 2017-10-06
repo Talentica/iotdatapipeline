@@ -64,7 +64,7 @@ public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializab
 	private JavaStreamingContext initializeContext() {
 
 
-		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName(streamerName).set("spark.driver.memory","4g");
+		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName(streamerName).set("spark.driver.memory","1g");
 		return new JavaStreamingContext(conf, Durations.milliseconds(sparkBatchInterval));
 	}
 
