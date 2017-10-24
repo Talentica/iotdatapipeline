@@ -70,6 +70,7 @@ public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializab
 
     private void saveStreamDataToIgniteCache(JavaStreamingContext context, IgniteCache<TempKey,TemperatureMongo> igniteCache,
                                              JavaIgniteRDD<TempKey,TemperatureMongo> igniteRDD) {
+	    logger.info("Using broker url:{}"+brokerUrl);
         JavaReceiverInputDStream<String> rawData = MQTTUtils.createStream(context, brokerUrl, topic,
                 StorageLevel.MEMORY_AND_DISK(), clientId, null, null, false, 1, 10, 300,
                 MqttConnectOptions.MQTT_VERSION_3_1_1);
