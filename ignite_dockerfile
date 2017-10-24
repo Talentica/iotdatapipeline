@@ -6,4 +6,4 @@ RUN curl --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nex
     curl --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nexus/repository/config_files/application.properties" -o application/application.properties &&\
     rm application/nexus.crt
 WORKDIR application
-CMD ["java","-jar","ignite.jar", "ignite","-Xms1024m","-Xmx1024m"]
+CMD ["java","-jar","ignite.jar", "ignite","-Xms512m","-Xmx512m"]
