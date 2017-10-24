@@ -16,14 +16,6 @@ services:
     build:
       context: /home/subhasishp/PycharmProjects/dockerWrapper/wrapper/composer
       dockerfile: ignite_dockerfile
-    deploy:   
-      resources:
-       limits:
-         cpus: '0.03'
-         memory: 1024M
-       reservations:
-         cpus: '0.002'
-         memory: 512m
 #    ports:
 #     - "3000:3000"
   mongo:
