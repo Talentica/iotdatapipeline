@@ -83,7 +83,7 @@ public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializab
                     List<String> collect = stringJavaRDD.collect();
                     Map<TempKey,TemperatureMongo> temperatureMongoMap = new HashMap();
                     for (String data : collect) {
-                        JSONObject strJson = new JSONObject(data);
+                        JSONObject strJson = new JSONObject(data.trim());
                         Integer deviceId = Integer.parseInt(strJson.getString("device_id"));
                         Float temperature = Float.parseFloat(strJson.getString("temperature"));
                         TempKey tempKey = new TempKey();
