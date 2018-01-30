@@ -18,6 +18,7 @@ import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.mqtt.MQTTUtils;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,10 +37,9 @@ public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializab
 	private static final long serialVersionUID = 1L;
 	private String streamerName = "IgniteStreamer";
 	
-	
 	@Autowired
 	MongoCacheStore mongoCacheStore;
-
+	
 	public void run() {
 		logger.info("streamerName: " + streamerName + " brokerUrl: " + brokerUrl + " sparkBatchInterval: "
 				+ sparkBatchInterval + " topic: " + topic);
@@ -58,57 +58,67 @@ public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializab
 		JavaIgniteRDD<TempKey,TemperatureMongo> igniteRDD = igniteContext.fromCache("TemperatureCache");
 
         saveStreamDataToIgniteCache(context,igniteCache,igniteRDD);
-
 	}
 
 	private JavaStreamingContext initializeContext() {
-
-
 		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName(streamerName).set("spark.driver.memory","1g");
 		return new JavaStreamingContext(conf, Durations.milliseconds(sparkBatchInterval));
 	}
 
     private void saveStreamDataToIgniteCache(JavaStreamingContext context, IgniteCache<TempKey,TemperatureMongo> igniteCache,
                                              JavaIgniteRDD<TempKey,TemperatureMongo> igniteRDD) {
-	    logger.info("Using broker url:{}"+brokerUrl);
+	    
+    	logger.info("Using broker url:{}"+brokerUrl);
         JavaReceiverInputDStream<String> rawData = MQTTUtils.createStream(context, brokerUrl, topic,
                 StorageLevel.MEMORY_AND_DISK(), clientId, null, null, false, 1, 10, 300,
                 MqttConnectOptions.MQTT_VERSION_3_1_1);
 
-        rawData.foreachRDD(new VoidFunction<JavaRDD<String>>() {
+        
+		rawData.foreachRDD(new VoidFunction<JavaRDD<String>>() {
+			@Override
+			public void call(JavaRDD<String> stringJavaRDD) throws Exception {
+				if (stringJavaRDD != null) {
+					List<String> collect = stringJavaRDD.collect();
+					Map<TempKey, TemperatureMongo> temperatureMongoMap = new HashMap();
+					for (String data : collect) {
+						try {
+							JSONObject strJson = new JSONObject(data.trim());
 
-            @Override
-            public void call(JavaRDD<String> stringJavaRDD) throws Exception {
-                if (stringJavaRDD != null) {
-                    List<String> collect = stringJavaRDD.collect();
-                    Map<TempKey,TemperatureMongo> temperatureMongoMap = new HashMap();
-                    for (String data : collect) {
-                        JSONObject strJson = new JSONObject(data.trim());
-                        Integer deviceId = Integer.parseInt(strJson.getString("device_id"));
-                        Float temperature = Float.parseFloat(strJson.getString("temperature"));
-                        TempKey tempKey = new TempKey();
-                        tempKey.setSensorId(deviceId);
-                        tempKey.setTs(new Date());
-                        TemperatureMongo temperatureMongo = new TemperatureMongo(tempKey,temperature);
-                        temperatureMongoMap.put(temperatureMongo.getId(),temperatureMongo);
-                    }
-                    igniteCache.putAll(temperatureMongoMap);
-                }
-            }
-        });
+							Integer deviceId = strJson.getInt("device_id");
+							Float temperature = Float.parseFloat(strJson.getString("temperature"));
+							
+							Date timestamp = null;
+							if(strJson.has("timestamp") && !strJson.isNull("timestamp"))
+								timestamp = new Date(strJson.getLong("timestamp")); // TODO: More advance logic for handling other date types.
+							else
+								timestamp = new Date();
+							
+							TempKey tempKey = new TempKey();
+							tempKey.setSensorId(deviceId);
+							tempKey.setTs(timestamp);
+
+							TemperatureMongo temperatureMongo = new TemperatureMongo(tempKey, temperature);
+							temperatureMongoMap.put(temperatureMongo.getId(), temperatureMongo);
+						}catch (Exception e) {
+							logger.error("Malformed data from sensor", e);
+						}
+					}
+					igniteCache.putAll(temperatureMongoMap);
+				}
+			}
+		});
 
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				logger.info("Samples count:" + igniteRDD.count());
-
 				Dataset<Row> ds = igniteRDD.sql("SELECT count(*) From TemperatureMongo ");
-
 				ds.show();
-
 			}
 		}, 1000, 4000);
-        context.start();
+        
+		context.start();
+        
         try {
             context.awaitTermination();
         } catch (InterruptedException e) {

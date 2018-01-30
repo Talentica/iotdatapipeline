@@ -33,20 +33,22 @@ public class TempKey implements Serializable {
 	/**
 	 * Sensor ID. Set as an affinity key in 'ignite-config.xml'.
 	 */
+	// TODO: for making a generic system. this id should be string device identifier which corresponds to a unique device_id in our db.
 	private int sensorId;
 
 	/**
 	 * Timestamp of the record.
 	 */
-	private Date ts;
-
-	private UUID uuid;
-
+	private Date ts; // This should come from the sensor (ms UTC). generating this on server can cause analytic-error due to lag.
+	
+	private UUID uuid; // Why are we generating this?
 
 	public TempKey() {
 		this.uuid = UUID.randomUUID();
 	}
-
+	
+	// Effectively we are using the default equals. every object is unique.
+	// We should not de-duplicate data from sensors. data from sensors are expected to be unique by default.
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
@@ -59,15 +61,14 @@ public class TempKey implements Serializable {
 
 		if (sensorId != key.sensorId)
 			return false;
-		return ts != null ? ts.equals(key.ts) : key.ts == null;
-
+		return uuid != null ? uuid.equals(key.uuid) : key.uuid == null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		int result = sensorId;
-		result = 31 * result + (ts != null ? ts.hashCode() : 0);
+		result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
 		return result;
 	}
 
@@ -99,6 +100,4 @@ public class TempKey implements Serializable {
 	public String toString() {
 		return "TempKey [sensorId=" + sensorId + ", ts=" + ts + ", uuid=" + uuid + "]";
 	}
-	
-	
 }
