@@ -1,6 +1,8 @@
 package com.talentica.iot.mqtt.client.impl;
 
+import com.talentica.iot.domain.TempKey;
 import com.talentica.iot.domain.Temperature;
+import com.talentica.iot.domain.TemperatureMongo;
 import com.talentica.iot.mongo.repository.TemperatureRepository;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component("sparkMongoDBStreamer")
@@ -56,13 +59,27 @@ public class SparkMongoDBStreamer extends SparkStreamerImpl {
 					List<String> collect = rdd.collect();
 					List<Temperature> temperatureList = new ArrayList<>();
 					for (String data : collect) {
-						JSONObject strJson = new JSONObject(data);
-						Temperature sampleTemperature = new Temperature();
-						Integer deviceId = Integer.parseInt(strJson.getString("device_id"));
-						Float temperature = Float.parseFloat(strJson.getString("temperature"));
-						sampleTemperature.setDeviceId(deviceId);
-						sampleTemperature.setTemperature(temperature);
-						temperatureList.add(sampleTemperature);
+						try {
+							JSONObject strJson = new JSONObject(data);
+							Temperature sampleTemperature = new Temperature();
+							
+							Integer deviceId = strJson.getInt("device_id");
+							Float temperature = Float.parseFloat(strJson.getString("temperature"));
+							
+							sampleTemperature.setDeviceId(deviceId);
+							sampleTemperature.setTemperature(temperature);
+								
+							Date timestamp = null;
+							if(strJson.has("timestamp") && !strJson.isNull("timestamp"))
+								timestamp = new Date(strJson.getLong("timestamp")); // TODO: More advance logic for handling other date types.
+							else
+								timestamp = new Date();
+							sampleTemperature.setTs(timestamp);
+							temperatureList.add(sampleTemperature);
+						}catch (Exception e) {
+							System.out.println("Malformed data from sensor");
+							e.printStackTrace();
+						}
 					}
 					temperatureRepository.save(temperatureList);
 				}

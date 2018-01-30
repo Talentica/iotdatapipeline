@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Document
 public class Temperature implements Serializable {
@@ -19,6 +20,12 @@ public class Temperature implements Serializable {
 	public Integer deviceId;
 	public Float temperature;
 
+	/**
+	 * Timestamp of the record.
+	 */
+	private Date ts; // This should come from the sensor (ms UTC). generating
+						// this on server can cause analytic-error due to lag.
+
 	public Temperature() {
 	}
 
@@ -26,10 +33,10 @@ public class Temperature implements Serializable {
 		this.deviceId = deviceId;
 		this.temperature = temperature;
 	}
-
+	
 	@Override
 	public String toString() {
-		return String.format("Temperature[id=%s, deviceId='%d', temperature='%f']", id, deviceId, temperature);
+		return "Temperature [id=" + id + ", deviceId=" + deviceId + ", temperature=" + temperature + ", ts=" + ts + "]";
 	}
 
 	public void setDeviceId(Integer deviceId) {
@@ -56,4 +63,11 @@ public class Temperature implements Serializable {
 		return id;
 	}
 
+	public Date getTs() {
+		return ts;
+	}
+
+	public void setTs(Date ts) {
+		this.ts = ts;
+	}
 }
