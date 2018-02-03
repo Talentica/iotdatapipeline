@@ -14,7 +14,7 @@ services:
     network_mode: "host"
     build:
       context: /home/subhasishp/PycharmProjects/dockerWrapper/wrapper/composer
-      dockerfile: ignite_dockerfile
+      dockerfile: Dockerfile
 
   mongo:
     image: mongo

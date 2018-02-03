@@ -26,8 +26,8 @@ pipeline{
 
 	stage('Docker Build'){
 	    steps{
-	    sh "ls IgniteSparkIoT/target"
-	    sh "docker images"
+	    sh "mv IgniteSparkIoT/target/IgniteSparkIOT*.jar IgniteSparkIoT/docker/ignite.jar"
+	    sh "docker build -t ignite -f "IgniteSparkIoT/docker/Dockerfile"
 
 
 
