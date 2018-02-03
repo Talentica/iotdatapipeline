@@ -24,7 +24,7 @@ pipeline{
 	stage('Docker Build'){
 	    steps{
 	    sh "mv IgniteSparkIoT/target/IgniteSparkIOT*.jar IgniteSparkIoT/docker/ignite.jar"
-	    sh "mv IgniteSparkIoT/applicaton.properties IgniteSparkIoT/docker/applicaton.properties"
+	    sh "mv IgniteSparkIoT/application.properties IgniteSparkIoT/docker/application.properties"
 	    sh "docker build -t ignite IgniteSparkIoT/docker/"
 	         }
 	    }
