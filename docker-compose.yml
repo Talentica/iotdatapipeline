@@ -1,7 +1,6 @@
 version: '3'
 services:
   EMQ:
-
     ports:
       - "1883:1883"
 
@@ -16,8 +15,7 @@ services:
     build:
       context: /home/subhasishp/PycharmProjects/dockerWrapper/wrapper/composer
       dockerfile: ignite_dockerfile
-#    ports:
-#     - "3000:3000"
+
   mongo:
     image: mongo
     container_name: mongo

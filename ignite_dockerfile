@@ -1,9 +1,6 @@
 FROM java:alpine
 RUN mkdir application
 RUN apk --no-cache add curl
-COPY ssl/nexus.crt application
-RUN curl --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nexus/repository/nexus/IgniteSparkIOT-0.0.1-SNAPSHOT.jar" -o application/ignite.jar &&\
-    curl --cacert application/nexus.crt  -X GET  "https://172.19.103.71:8443/nexus/repository/config_files/application.properties" -o application/application.properties &&\
-    rm application/nexus.crt
+COPY target/ application
 WORKDIR application
 CMD ["java","-Xms512m","-Xmx512m","-jar","ignite.jar", "ignite"]
