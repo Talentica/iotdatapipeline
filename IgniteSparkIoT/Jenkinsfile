@@ -28,14 +28,20 @@ pipeline{
 	    steps{
 	    sh "mv IgniteSparkIoT/target/IgniteSparkIOT*.jar IgniteSparkIoT/docker/ignite.jar"
 	    sh "docker build -t ignite IgniteSparkIoT/docker/"
-
-
-
 	         }
-
-
 	    }
 
+    stage('Docker Push'){
+       steps{
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub_id',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]){
+         sh "docker tag ignite:latest shubhashish/iot-ignite:latest"
+         sh "docker login -u $USERNAME -p $PASSWORD"
+         sh "docker push shubhashish/iot-ignite:latest"
+               }
+
+            }
+
+       }
 
 	}
 
