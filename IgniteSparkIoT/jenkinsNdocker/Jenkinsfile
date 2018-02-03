@@ -20,13 +20,13 @@ pipeline{
 	   steps{
 		echo "Building Maven Project"
 		sh "mvn -f ${params.pomPath} clean install"
-		archiveArtifacts artifacts: 'target/IgniteSparkIOT*.jar', fingerprint: true
+		archiveArtifacts artifacts: 'IginteSparkIoT/target/IgniteSparkIOT*.jar', fingerprint: true
             }
         }
 
 	stage('Docker Build'){
 	    steps{
-	    sh "ls"
+	    sh "ls IginteSparkIoT/"
 	    sh "docker images"
 
 
