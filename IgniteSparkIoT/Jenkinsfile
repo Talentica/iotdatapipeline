@@ -6,11 +6,8 @@ pipeline{
 }
 
     parameters {
-	string(name: 'gitUrl', defaultValue: 'http://github.com/Talentica/iotdatapipeline.git', description: 'Project Git Url')
-	string(name: 'gitBranch', defaultValue: 'spring_boot', description: 'Git branch top checkout')
-	string(name: 'pomPath', defaultValue: 'IgniteSparkIoT/pom.xml', description: 'path of pom.xml')
 	string(name: 'repositoryUrl', defaultValue: 'https://172.19.103.71:8443/nexus/repository/', description: 'repository url')
-	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5000/', description: 'wrapper application url')
+	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5002/', description: 'wrapper application url')
 	string(name: 'deploymentOption', defaultValue: 'Ignite', description: 'which component to deploy')
 
 }
@@ -19,7 +16,7 @@ pipeline{
 	stage('Maven Build'){
 	   steps{
 		echo "Building Maven Project"
-		sh "mvn -f ${params.pomPath} clean install"
+		sh "mvn -f IgniteSparkIoT/pom.xml clean install"
 		archiveArtifacts artifacts: 'IgniteSparkIoT/target/IgniteSparkIOT*.jar', fingerprint: true
             }
         }
@@ -27,6 +24,7 @@ pipeline{
 	stage('Docker Build'){
 	    steps{
 	    sh "mv IgniteSparkIoT/target/IgniteSparkIOT*.jar IgniteSparkIoT/docker/ignite.jar"
+	    sh "mv IgniteSparkIoT/applicaton.properties IgniteSparkIoT/docker/applicaton.properties"
 	    sh "docker build -t ignite IgniteSparkIoT/docker/"
 	         }
 	    }
@@ -40,6 +38,15 @@ pipeline{
                }
 
             }
+
+       }
+
+    stage('Deployment'){
+       steps{
+          sh "curl -X POST  -F \"serviceName=${params.deploymentOption}\" -F \"deploymentFile=@IgniteSparkIoT/deployment/docker-compose.yml\" ${params.wrapperUrl}v1/api/wrapper/deploy | tee error.txt"
+		  sh "if [ `grep -o \"{'status':'failure'\" error.txt | wc -l` -gt 0 ]; then exit 1; else echo \"Failure Check Passed\"; fi"
+          }
+
 
        }
 

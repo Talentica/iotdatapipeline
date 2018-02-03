@@ -9,7 +9,7 @@ services:
     network_mode: "host"
 
   Ignite:
-    image: 127.0.0.1:5000/ignite
+    image: shubhashish/iot-ignite
     container_name: ignite
     network_mode: "host"
     build:
