@@ -20,7 +20,7 @@ pipeline{
 	   steps{
 		echo "Building Maven Project"
 		sh "mvn -f ${params.pomPath} clean install"
-		archiveArtifacts artifact: 'target/IgniteSparkIOT*.jar', fingerprint: true
+		archiveArtifacts artifacts: 'target/IgniteSparkIOT*.jar', fingerprint: true
             }
         }
 
