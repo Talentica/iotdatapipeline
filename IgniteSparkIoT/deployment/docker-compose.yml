@@ -1,7 +1,6 @@
 version: '3'
 services:
   EMQ:
-
     ports:
       - "1883:1883"
 
@@ -10,14 +9,13 @@ services:
     network_mode: "host"
 
   Ignite:
-    image: 127.0.0.1:5000/ignite
+    image: shubhashish/iot-ignite
     container_name: ignite
     network_mode: "host"
     build:
       context: /home/subhasishp/PycharmProjects/dockerWrapper/wrapper/composer
-      dockerfile: ignite_dockerfile
-#    ports:
-#     - "3000:3000"
+      dockerfile: Dockerfile
+
   mongo:
     image: mongo
     container_name: mongo

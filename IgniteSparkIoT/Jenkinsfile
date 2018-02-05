@@ -1,0 +1,58 @@
+pipeline{
+    agent any
+   
+    tools{
+	maven 'maven' 
+}
+
+    parameters {
+	string(name: 'repositoryUrl', defaultValue: 'https://172.19.103.71:8443/nexus/repository/', description: 'repository url')
+	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5002/', description: 'wrapper application url')
+	string(name: 'deploymentOption', defaultValue: 'Ignite', description: 'which component to deploy')
+
+}
+
+    stages{
+	stage('Maven Build'){
+	   steps{
+		echo "Building Maven Project"
+		sh "mvn -f IgniteSparkIoT/pom.xml clean install"
+		archiveArtifacts artifacts: 'IgniteSparkIoT/target/IgniteSparkIOT*.jar', fingerprint: true
+            }
+        }
+
+	stage('Docker Build'){
+	    steps{
+	    sh "mv IgniteSparkIoT/target/IgniteSparkIOT*.jar IgniteSparkIoT/docker/ignite.jar"
+	    sh "mv IgniteSparkIoT/application.properties IgniteSparkIoT/docker/application.properties"
+	    sh "docker build -t ignite IgniteSparkIoT/docker/"
+	         }
+	    }
+
+    stage('Docker Push'){
+       steps{
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub_id',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]){
+         sh "docker tag ignite:latest shubhashish/iot-ignite:latest"
+         sh "docker login -u $USERNAME -p $PASSWORD"
+         sh "docker push shubhashish/iot-ignite:latest"
+               }
+
+            }
+
+       }
+
+    stage('Deployment'){
+       steps{
+          sh "curl -X POST  -F \"serviceName=${params.deploymentOption}\" -F \"deploymentFile=@IgniteSparkIoT/deployment/docker-compose.yml\" ${params.wrapperUrl}v1/api/wrapper/deploy | tee error.txt"
+		  sh "if [ `grep -o \"{'status':'failure'\" error.txt | wc -l` -gt 0 ]; then exit 1; else echo \"Failure Check Passed\"; fi"
+          }
+
+
+       }
+
+	}
+
+
+
+
+}
