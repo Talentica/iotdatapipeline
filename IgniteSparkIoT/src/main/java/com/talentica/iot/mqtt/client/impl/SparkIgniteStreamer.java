@@ -115,7 +115,7 @@ public class SparkIgniteStreamer extends SparkStreamerImpl implements Serializab
 				Dataset<Row> ds = igniteRDD.sql("SELECT count(*) From TemperatureMongo ");
 				ds.show();
 			}
-		}, 1000, 4000);
+		}, 1000, 40000);
         
 		context.start();
         
