@@ -7,8 +7,8 @@ pipeline{
 
     parameters {
 	string(name: 'repositoryUrl', defaultValue: 'https://172.19.103.71:8443/nexus/repository/', description: 'repository url')
-	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5002/', description: 'wrapper application url')
-	string(name: 'deploymentOption', defaultValue: 'Ignite', description: 'which component to deploy')
+	string(name: 'wrapperUrl', defaultValue: 'http://172.19.103.71:5000/', description: 'wrapper application url')
+	string(name: 'deploymentOption', defaultValue: 'all', description: 'which component to deploy')
 
 }
 
@@ -43,7 +43,7 @@ pipeline{
 
     stage('Deployment'){
        steps{
-          sh "curl -X POST  -F \"serviceName=${params.deploymentOption}\" -F \"deploymentFile=@IgniteSparkIoT/deployment/docker-compose.yml\" ${params.wrapperUrl}v1/api/wrapper/deploy | tee error.txt"
+          sh "curl -X POST  -F \"serviceName=${params.deploymentOption}\" -F \"deploymentFile=@IgniteSparkIoT/deployment/docker-compose.yml\" ${params.wrapperUrl}v2/api/wrapper/deploy | tee error.txt"
 		  sh "if [ `grep -o \"{'status':'failure'\" error.txt | wc -l` -gt 0 ]; then exit 1; else echo \"Failure Check Passed\"; fi"
           }
 
